@@ -1,0 +1,28 @@
+﻿@page "/parkinghouse"
+@using DataBaseModel
+
+<PageTitle>Parkhäuser verwalten</PageTitle>
+
+<h1>Parkhäuser verwalten</h1>
+
+<form method="post">
+    <fieldset>
+        <legend>Ein neues Parkhaus erstellen:</legend>
+        <div>
+            <label for="ParkingHouseName">Parkhausname:</label>
+            <input type="text" name="ParkingHouseName" value="" />
+        </div>
+        
+        <button class="btn btn-primary" @onclick="AddParkhouse">Parkhaus hinzufügen</button>
+    </fieldset>
+</form>
+
+
+@code {
+    private void AddParkhouse()
+    {
+
+        var parkingHouse = new ParkingHouse();
+
+    }
+}
