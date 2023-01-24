@@ -18,7 +18,7 @@ namespace ParkplatzVerwaltungsTool.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Invoice()
         {
             return View();
         }

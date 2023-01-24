@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Abrechnung";
+}
+<h1>@ViewData["Title"]</h1>
+
+<h4>Geben sie das Start- und Enddatum der Abrechnung an</h4>
+
+<form>
+    <div>
+        <label for="name">Startdatum:</label>
+        <input type="date" id="startDate" name="startDate">
+        <label for="name">Enddatum:</label>
+        <input type="date" id="endDate" name="endDate">
+    </div>
+    <div>
+        <input type="submit" value="Abrechnung erzeugen" formaction="Provider/Save" formmethod="post"/>
+    </ div>
+    <div id="levels"></div>
+</form>

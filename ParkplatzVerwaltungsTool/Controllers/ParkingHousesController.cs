@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.EntityFrameworkCore;
 using ParkplatzVerwaltungsTool.Models;
 
@@ -11,9 +12,9 @@ namespace ParkplatzVerwaltungsTool.Controllers
 {
     public class ParkingHousesController : Controller
     {
-        private readonly ParkingHouseContext _context;
+        private readonly ParkingHouseSystemContext _context;
 
-        public ParkingHousesController(ParkingHouseContext context)
+        public ParkingHousesController(ParkingHouseSystemContext context)
         {
             _context = context;
         }
@@ -21,7 +22,14 @@ namespace ParkplatzVerwaltungsTool.Controllers
         // GET: ParkingHouses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ParkingHouses.ToListAsync());
+            if (_context.ParkingHouses != null)
+            {
+                return View(await _context.ParkingHouses.ToListAsync());
+            }
+            else
+            {
+                return View(Problem("Entity set 'ParkingHouseSystemContext.ParkingHouses'  is null."));
+            }
         }
 
         // GET: ParkingHouses/Details/5
@@ -140,7 +148,7 @@ namespace ParkplatzVerwaltungsTool.Controllers
         {
             if (_context.ParkingHouses == null)
             {
-                return Problem("Entity set 'ParkingHouseContext.ParkingHouses'  is null.");
+                return Problem("Entity set 'ParkingHouseSystemContext.ParkingHouses'  is null.");
             }
             var parkingHouse = await _context.ParkingHouses.FindAsync(id);
             if (parkingHouse != null)
@@ -155,6 +163,19 @@ namespace ParkplatzVerwaltungsTool.Controllers
         private bool ParkingHouseExists(int id)
         {
           return (_context.ParkingHouses?.Any(e => e.ParkingHouseId == id)).GetValueOrDefault();
+        }
+
+        public IActionResult AddLevel(int parkingHouseId)
+        {
+            var parkingHouse = _context.ParkingHouses.Find(parkingHouseId);
+            if (parkingHouse != null)
+            {
+                var newLevel = new ParkingHouseLevel { ParkingHouseLevelName = "New Level" };
+                parkingHouse.ParkingHouseLevels.Add(newLevel);
+                _context.SaveChanges();
+                return RedirectToAction("Details", new { id = parkingHouseId });
+            }
+            return NotFound();
         }
     }
 }

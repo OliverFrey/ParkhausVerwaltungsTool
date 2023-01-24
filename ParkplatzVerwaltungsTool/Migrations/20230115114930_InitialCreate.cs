@@ -16,7 +16,7 @@ namespace ParkplatzVerwaltungsTool.Migrations
                 {
                     ParkingHouseId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ParkingHouseName = table.Column<string>(type: "TEXT", nullable: true)
+                    ParkingHouseName = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
