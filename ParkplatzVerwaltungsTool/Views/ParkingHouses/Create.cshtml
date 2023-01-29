@@ -1,4 +1,4 @@
-﻿@model ParkplatzVerwaltungsTool.Models
+﻿@model ParkplatzVerwaltungsTool.Models.ParkingHouseViewModel
 
 @{
     ViewData["Title"] = "Parkhaus erstellen";
@@ -12,20 +12,31 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label for="name">Parkhausname:</label>
-                <input asp-for="ParkingHouse.ParkingHouseName" class="form-control" />
-                <span asp-validation-for="ParkingHouse.ParkingHouseName" class="text-danger"></span>
+                <input asp-for="ParkingHouses.ParkingHouseName" class="form-control" />
+                <span asp-validation-for="ParkingHouses.ParkingHouseName" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label for="name">Parkhausname:</label>
-                <input asp-for="ParkingHouseLevels" class="form-control" />
-                <span asp-validation-for="ParkingHouseName" class="text-danger"></span>
+            <div class="form-group">
+                <label for="name">Parkhauslevel:</label>
+                <input asp-for="ParkingHouseLevels.ParkingHouseLevelName" class="form-control" />
+                <span asp-validation-for="ParkingHouseLevels.ParkingHouseLevelName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="name">Parkhausplatz:</label>
+                <input asp-for="ParkingPlaces.ParkingPlaceNumber" class="form-control" />
+                <span asp-validation-for="ParkingPlaces.ParkingPlaceNumber" class="text-danger"></span>
+            </div>
+
+            @*<button type="button" onclick="addLevel()">Add Level</button>
+            <div id="levels">
+                @foreach (var m in Model.ParkingHouseLevels)
+                {
+                    m.ParkingHouseLevelName
+                }
             </div>*@
 
-            <button type="button" onclick="addLevel()">Add Level</button>
-            <div id="levels"></div>
 
-            <div>
-                <input type="submit" value="Parkhaus speichern" formaction="Provider/Save" formmethod="post" />
+            <div class="form-group">
+                <input type="submit" value="Parkhaus erstellen" class="btn btn-primary" />
             </div>
         </form>
     </div>

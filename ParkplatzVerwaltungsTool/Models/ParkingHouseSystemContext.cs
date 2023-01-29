@@ -4,6 +4,7 @@ namespace ParkplatzVerwaltungsTool.Models
 {
     public class ParkingHouseSystemContext : DbContext
     {
+        public DbSet<ParkingHouseViewModel> ParkingHouseViewModel { get; set; }
         public DbSet<ParkingHouse> ParkingHouses { get; set; }
         public DbSet<ParkingHouseLevel> ParkingHouseLevels { get; set; }
         public DbSet<ParkingPlace> ParkingPlaces { get; set; }

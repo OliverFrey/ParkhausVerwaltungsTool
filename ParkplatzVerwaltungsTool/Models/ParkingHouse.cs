@@ -1,13 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace ParkplatzVerwaltungsTool.Models
 {
+    [Keyless]
+    public class ParkingHouseViewModel
+    {
+        public ParkingHouse ParkingHouses { get; set; }
+        public ParkingHouseLevel ParkingHouseLevels { get; set; }
+        public ParkingPlace ParkingPlaces { get; set; }
+    }
+
     public class ParkingHouse
     {
         [Key]
         public int ParkingHouseId { get; set; }
         public string ParkingHouseName { get; set; }
-        public List<ParkingHouseLevel> ParkingHouseLevels { get; set; }
+        public ICollection<ParkingHouseLevel> ParkingHouseLevels { get; set; }
 
         public ParkingHouse()
         {
@@ -19,8 +28,13 @@ namespace ParkplatzVerwaltungsTool.Models
     {
         [Key]
         public int ParkingHouseLevelId { get; set; }
-        public string? ParkingHouseLevelName { get; set; }
-        public ICollection<ParkingPlace>? ParkingPlaces { get; set; }
+        public string ParkingHouseLevelName { get; set; }
+        public ICollection<ParkingPlace> ParkingPlaces { get; set; }
+
+        public ParkingHouseLevel()
+        {
+            ParkingPlaces = new List<ParkingPlace>();
+        }
     }
 
     public class ParkingPlace

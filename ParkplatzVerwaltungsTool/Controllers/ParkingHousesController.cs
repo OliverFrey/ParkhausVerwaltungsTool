@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using ParkplatzVerwaltungsTool.Models;
 
 namespace ParkplatzVerwaltungsTool.Controllers
@@ -53,6 +54,10 @@ namespace ParkplatzVerwaltungsTool.Controllers
         // GET: ParkingHouses/Create
         public IActionResult Create()
         {
+            ParkingHouseViewModel model = new ParkingHouseViewModel();
+            model.ParkingHouses = new ParkingHouse();
+            model.ParkingHouseLevels = new ParkingHouseLevel();
+            model.ParkingPlaces = new ParkingPlace();
             return View();
         }
 
@@ -61,15 +66,30 @@ namespace ParkplatzVerwaltungsTool.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ParkingHouseId,ParkingHouseName")] ParkingHouse parkingHouse)
+        public async Task<IActionResult> Create([Bind("ParkingHouses,ParkingHouseLevels,ParkingPlaces")] ParkingHouseViewModel parkingHouseViewModel)
         {
-            if (ModelState.IsValid)
+            if (parkingHouseViewModel.ParkingHouses.ParkingHouseName != null && parkingHouseViewModel.ParkingHouseLevels.ParkingHouseLevelName != null && parkingHouseViewModel.ParkingPlaces.ParkingPlaceNumber != null)
             {
-                _context.Add(parkingHouse);
+                parkingHouseViewModel.ParkingHouseLevels.ParkingPlaces.Add(parkingHouseViewModel.ParkingPlaces);
+                parkingHouseViewModel.ParkingHouses.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
+                _context.ParkingPlaces.Add(parkingHouseViewModel.ParkingPlaces);
+                _context.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
+                _context.ParkingHouses.Add(parkingHouseViewModel.ParkingHouses);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            return View(parkingHouse);
+            else if (parkingHouseViewModel.ParkingHouses.ParkingHouseName != null && parkingHouseViewModel.ParkingHouseLevels.ParkingHouseLevelName != null)
+            {
+                parkingHouseViewModel.ParkingHouses.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
+                _context.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
+                _context.ParkingHouses.Add(parkingHouseViewModel.ParkingHouses);
+                await _context.SaveChangesAsync();
+            }
+            else if (parkingHouseViewModel.ParkingHouses.ParkingHouseName != null)
+            {
+                _context.ParkingHouses.Add(parkingHouseViewModel.ParkingHouses);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: ParkingHouses/Edit/5
@@ -80,12 +100,17 @@ namespace ParkplatzVerwaltungsTool.Controllers
                 return NotFound();
             }
 
+            var parkingHouseViewModel = new ParkingHouseViewModel();
+
             var parkingHouse = await _context.ParkingHouses.FindAsync(id);
             if (parkingHouse == null)
             {
                 return NotFound();
             }
-            return View(parkingHouse);
+            parkingHouseViewModel.ParkingHouses= parkingHouse;
+            parkingHouseViewModel.ParkingHouseLevels = parkingHouse.ParkingHouseLevels.FirstOrDefault();
+            parkingHouseViewModel.ParkingPlaces = await _context.ParkingPlaces.FindAsync();
+            return View(parkingHouseViewModel);
         }
 
         // POST: ParkingHouses/Edit/5
