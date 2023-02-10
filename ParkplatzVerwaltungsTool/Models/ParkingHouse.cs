@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.CodeAnalysis.Elfie.Model.Tree;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace ParkplatzVerwaltungsTool.Models
@@ -28,6 +29,7 @@ namespace ParkplatzVerwaltungsTool.Models
     {
         [Key]
         public int ParkingHouseLevelId { get; set; }
+        public int ParkingHouseId { get; set; }
         public string ParkingHouseLevelName { get; set; }
         public ICollection<ParkingPlace> ParkingPlaces { get; set; }
 
@@ -35,12 +37,19 @@ namespace ParkplatzVerwaltungsTool.Models
         {
             ParkingPlaces = new List<ParkingPlace>();
         }
+
+        public static async Task<List<ParkingHouseLevel>> GetParkingHouseLevelsByParkingHouseId (int parkingHouseId)
+        {
+            var temp = new List<ParkingHouseLevel>();
+            return temp;
+        }
     }
 
     public class ParkingPlace
     {
         [Key]
         public int ParkingPlaceId { get; set; }
+        public int ParkingHouseLevelId { get; set; }
         public int? ParkingPlaceNumber { get; set; }
     }
 }
