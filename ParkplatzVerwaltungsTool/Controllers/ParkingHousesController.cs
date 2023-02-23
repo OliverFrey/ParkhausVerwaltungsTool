@@ -41,7 +41,7 @@ namespace ParkplatzVerwaltungsTool.Controllers
                 return NotFound();
             }
 
-            var parkingHouse = await _context.ParkingHouses
+            var parkingHouse = await _context.ParkingHouses.Include(p => p.ParkingHouseLevels).ThenInclude(pl => pl.ParkingPlaces)
                 .FirstOrDefaultAsync(m => m.ParkingHouseId == id);
             if (parkingHouse == null)
             {
@@ -54,10 +54,6 @@ namespace ParkplatzVerwaltungsTool.Controllers
         // GET: ParkingHouses/Create
         public IActionResult Create()
         {
-            ParkingHouseViewModel model = new ParkingHouseViewModel();
-            model.ParkingHouses = new ParkingHouse();
-            model.ParkingHouseLevels = new ParkingHouseLevel();
-            model.ParkingPlaces = new ParkingPlace();
             return View();
         }
 
@@ -100,20 +96,14 @@ namespace ParkplatzVerwaltungsTool.Controllers
                 return NotFound();
             }
 
-            var parkingHouseViewModel = new ParkingHouseViewModel();
 
-            var parkingHouse = await _context.ParkingHouses.FindAsync(id);
+            var parkingHouse = await _context.ParkingHouses.Include(m => m.ParkingHouseLevels).ThenInclude(pl => pl.ParkingPlaces).Where(m => m.ParkingHouseId == id).FirstOrDefaultAsync();
             if (parkingHouse == null)
             {
                 return NotFound();
             }
-            var parkingHouseLevels = await _context.ParkingHouseLevels.Where(level => level.ParkingHouseId == parkingHouse.ParkingHouseId).FirstOrDefaultAsync();
-            var parkingPlaces = await _context.ParkingPlaces.Where(place => place.ParkingHouseLevelId == parkingHouseLevels.ParkingHouseLevelId).FirstOrDefaultAsync();
-
-            parkingHouseViewModel.ParkingHouses= parkingHouse;
-            parkingHouseViewModel.ParkingHouseLevels = parkingHouseLevels;
-            parkingHouseViewModel.ParkingPlaces = parkingPlaces;
-            return View(parkingHouseViewModel);
+            
+            return View(parkingHouse);
         }
 
         // POST: ParkingHouses/Edit/5
