@@ -11,20 +11,12 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ParkingHouseName)
+            Parkhausname
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ParkingHouseName)
         </dd>
-        <dt class="col-sm-2">
-                <p>Parkhauslevel</p>
-            </dt>
-            <dd class="col-sm-10">
-                <p>Level 1</p>
-            </dd>
-            <dd>
-                <p>10 Levels</p>
-            </dd>
+        
         @foreach (var level in Model.ParkingHouseLevels)
         {
             <dt class="col-sm-2">
@@ -33,6 +25,14 @@
             <dd class="col-sm-10">
                 <p>
                     @level.ParkingHouseLevelName
+                </p>
+            </dd>
+            <dt class="col-sm-2">
+                <p>Parkplätze @level.ParkingHouseLevelName</p>
+            </dt>
+            <dd class="col-sm-10">
+                <p>
+                    @level.ParkingPlaces.Count()
                 </p>
             </dd>
         }
