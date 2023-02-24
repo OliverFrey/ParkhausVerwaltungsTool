@@ -54,11 +54,12 @@ namespace ParkplatzVerwaltungsTool.Controllers
         // GET: ParkingHouses/Create
         public IActionResult Create()
         {
+            //Hier muss mit .include ein model erstellt und dann ans View übergeben werden
             ParkingHouseViewModel model = new ParkingHouseViewModel();
             model.ParkingHouses = new ParkingHouse();
             model.ParkingHouseLevels = new ParkingHouseLevel();
             model.ParkingPlaces = new ParkingPlace();
-            return View();
+            return View(model);
         }
 
         // POST: ParkingHouses/Create
