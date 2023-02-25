@@ -7,9 +7,10 @@ namespace ParkplatzVerwaltungsTool.Models
         [Key]
         public int PriceId { get; set; }
         public string PriceName { get; set; }
-        public int PriceValue { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public int ParkingHouseId { get; set; }
+        public double PriceValue { get; set; }
+        public TimeOnly StartTime { get; set; }
+        public TimeOnly EndTime { get; set; }
     }
 
     public class Ticket

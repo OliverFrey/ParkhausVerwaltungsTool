@@ -7,7 +7,7 @@ namespace ParkplatzVerwaltungsTool.Models
         public DbSet<ParkingHouseViewModel> ParkingHouseViewModel { get; set; }
         public DbSet<ParkingHouse> ParkingHouses { get; set; }
         public DbSet<ParkingHouseLevel> ParkingHouseLevels { get; set; }
-        public DbSet<ParkingPlace> ParkingPlaces { get; set; }
+        //public DbSet<ParkingPlace> ParkingPlaces { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<PermamentUser> PermamentUsers { get; set; }
         public DbSet<Price> Prices { get; set; }

@@ -15,7 +15,8 @@ namespace ParkplatzVerwaltungsTool.Models
         public int PermamentUserId { get; set; }
         public string PermamentUserName { get; set; }
         public string PlateNumber { get; set; }
-        public ParkingPlace ParkingPlace { get; set; }
+        public int ParkingPlaceNumber { get; set; }
+        //public ParkingPlace ParkingPlace { get; set; }
         public DateTime LastPayDate { get; set; }
     }
 }

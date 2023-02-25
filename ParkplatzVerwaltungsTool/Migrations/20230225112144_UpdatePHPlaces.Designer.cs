@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ParkplatzVerwaltungsTool.Models;
 
@@ -10,9 +11,11 @@ using ParkplatzVerwaltungsTool.Models;
 namespace ParkplatzVerwaltungsTool.Migrations
 {
     [DbContext(typeof(ParkingHouseSystemContext))]
-    partial class ParkingHouseSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20230225112144_UpdatePHPlaces")]
+    partial class UpdatePHPlaces
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
@@ -73,9 +76,6 @@ namespace ParkplatzVerwaltungsTool.Migrations
 
                     b.Property<DateTime>("LastPayDate")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("ParkingPlaceNumber")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("PermamentUserName")
                         .IsRequired()

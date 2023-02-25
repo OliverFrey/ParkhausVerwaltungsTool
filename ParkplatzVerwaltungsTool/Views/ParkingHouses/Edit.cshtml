@@ -1,46 +1,45 @@
 ﻿@model ParkplatzVerwaltungsTool.Models.ParkingHouseViewModel
 
 @{
-    ViewData["Title"] = "Parkhaus bearbeiten";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>Parkhaus bearbeiten</h1>
+<h1>Edit</h1>
 
-<div>
-<h4>Parkhaus</h4>
+<h4>ParkingHouse</h4>
 <hr />
-<dl class="row">
-        <dt class = "col-sm-2">
-            Parkhausname
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.TextBoxFor(model => model.ParkingHouses.ParkingHouseName)
-        </dd>
-
-        @foreach (var level in Model.ParkingHouseLevels)
-        {
-                <dt class="col-sm-2">
-                    <p>Parkhauslevel</p>
-                </dt>
-                <dd class="col-sm-10">
-                    <p>
-                    @level.ParkingHouseLevelName
-                    </p>
-                </dd>
-                <dt class="col-sm-2">
-                    <p>Parkplätze @level.ParkingHouseLevelName</p>
-                </dt>
-                <dd class="col-sm-10">
-                    <p>
-                    @Html.TextBoxFor(places => places.ParkingPlaces.Count())
-                    </p>
-                </dd>
-        }
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ParkingHouses.ParkingHouseId" />
+            <div class="form-group">
+                <label title="Parkhausname" class="control-label"></label>
+                <input asp-for="ParkingHouses.ParkingHouseName" class="form-control" />
+                <span asp-validation-for="ParkingHouses.ParkingHouseName" class="text-danger"></span>
+            </div>
+            @foreach (var level in Model.ParkingHouseLevels)
+            {
+                <div class="form-group">
+                    <label title="Parkhauslevel" class="control-label"></label>
+                    <input asp-for="@level.ParkingHouseLevelName" class="form-control" />
+                    <span asp-validation-for="@level.ParkingHouseLevelName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label title="Anzahl Parkplätze" class="control-label"></label>
+                    <input asp-for="@level.ParkingPlaces" class="form-control" />
+                    <span asp-validation-for="@level.ParkingPlaces" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
 </div>
 
-
 <div>
-    <a asp-action="Index">Zurück zur Liste</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

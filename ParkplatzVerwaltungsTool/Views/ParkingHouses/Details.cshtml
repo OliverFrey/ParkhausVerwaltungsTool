@@ -7,38 +7,18 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Parkhaus</h4>
+    <h4>ParkingHouse</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            Parkhausname
+            @Html.DisplayNameFor(model => model.ParkingHouseName)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ParkingHouseName)
         </dd>
-        
-        @foreach (var level in Model.ParkingHouseLevels)
-        {
-            <dt class="col-sm-2">
-                <p>Parkhauslevel</p>
-            </dt>
-            <dd class="col-sm-10">
-                <p>
-                    @level.ParkingHouseLevelName
-                </p>
-            </dd>
-            <dt class="col-sm-2">
-                <p>Parkplätze @level.ParkingHouseLevelName</p>
-            </dt>
-            <dd class="col-sm-10">
-                <p>
-                    @level.ParkingPlaces.Count()
-                </p>
-            </dd>
-        }
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ParkingHouseId">Bearbeiten</a> |
-    <a asp-action="Index">Zurück zur Liste</a>
+    <a asp-action="Edit" asp-route-id="@Model?.ParkingHouseId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
 </div>

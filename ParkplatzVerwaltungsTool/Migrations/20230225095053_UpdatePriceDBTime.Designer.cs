@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ParkplatzVerwaltungsTool.Models;
 
@@ -10,9 +11,11 @@ using ParkplatzVerwaltungsTool.Models;
 namespace ParkplatzVerwaltungsTool.Migrations
 {
     [DbContext(typeof(ParkingHouseSystemContext))]
-    partial class ParkingHouseSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20230225095053_UpdatePriceDBTime")]
+    partial class UpdatePriceDBTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
@@ -45,9 +48,6 @@ namespace ParkplatzVerwaltungsTool.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ParkingPlaces")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("ParkingHouseLevelId");
 
                     b.HasIndex("ParkingHouseId");
@@ -65,6 +65,25 @@ namespace ParkplatzVerwaltungsTool.Migrations
                     b.ToTable("ParkingHouseViewModel");
                 });
 
+            modelBuilder.Entity("ParkplatzVerwaltungsTool.Models.ParkingPlace", b =>
+                {
+                    b.Property<int>("ParkingPlaceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ParkingHouseLevelId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ParkingPlaceNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ParkingPlaceId");
+
+                    b.HasIndex("ParkingHouseLevelId");
+
+                    b.ToTable("ParkingPlaces");
+                });
+
             modelBuilder.Entity("ParkplatzVerwaltungsTool.Models.PermamentUser", b =>
                 {
                     b.Property<int>("PermamentUserId")
@@ -74,7 +93,7 @@ namespace ParkplatzVerwaltungsTool.Migrations
                     b.Property<DateTime>("LastPayDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ParkingPlaceNumber")
+                    b.Property<int>("ParkingPlaceId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PermamentUserName")
@@ -86,6 +105,8 @@ namespace ParkplatzVerwaltungsTool.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("PermamentUserId");
+
+                    b.HasIndex("ParkingPlaceId");
 
                     b.ToTable("PermamentUsers");
                 });
@@ -106,15 +127,13 @@ namespace ParkplatzVerwaltungsTool.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("PriceValue")
-                        .HasColumnType("REAL");
+                    b.Property<int>("PriceValue")
+                        .HasColumnType("INTEGER");
 
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("TEXT");
 
                     b.HasKey("PriceId");
-
-                    b.HasIndex("ParkingHouseId");
 
                     b.ToTable("Prices");
                 });
@@ -173,20 +192,34 @@ namespace ParkplatzVerwaltungsTool.Migrations
                     b.Navigation("ParkingHouses");
                 });
 
-            modelBuilder.Entity("ParkplatzVerwaltungsTool.Models.Price", b =>
+            modelBuilder.Entity("ParkplatzVerwaltungsTool.Models.ParkingPlace", b =>
                 {
-                    b.HasOne("ParkplatzVerwaltungsTool.Models.ParkingHouse", null)
-                        .WithMany("Prices")
-                        .HasForeignKey("ParkingHouseId")
+                    b.HasOne("ParkplatzVerwaltungsTool.Models.ParkingHouseLevel", null)
+                        .WithMany("ParkingPlaces")
+                        .HasForeignKey("ParkingHouseLevelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ParkplatzVerwaltungsTool.Models.PermamentUser", b =>
+                {
+                    b.HasOne("ParkplatzVerwaltungsTool.Models.ParkingPlace", "ParkingPlace")
+                        .WithMany()
+                        .HasForeignKey("ParkingPlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParkingPlace");
                 });
 
             modelBuilder.Entity("ParkplatzVerwaltungsTool.Models.ParkingHouse", b =>
                 {
                     b.Navigation("ParkingHouseLevels");
+                });
 
-                    b.Navigation("Prices");
+            modelBuilder.Entity("ParkplatzVerwaltungsTool.Models.ParkingHouseLevel", b =>
+                {
+                    b.Navigation("ParkingPlaces");
                 });
 #pragma warning restore 612, 618
         }
