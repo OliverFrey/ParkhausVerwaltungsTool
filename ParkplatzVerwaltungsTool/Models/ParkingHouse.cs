@@ -8,8 +8,8 @@ namespace ParkplatzVerwaltungsTool.Models
     public class ParkingHouseViewModel
     {
         public ParkingHouse ParkingHouses { get; set; }
-        public ParkingHouseLevel ParkingHouseLevels { get; set; }
-        public ParkingPlace ParkingPlaces { get; set; }
+        public List<ParkingHouseLevel> ParkingHouseLevels { get; set; }
+        public List<ParkingPlace> ParkingPlaces { get; set; }
     }
 
     public class ParkingHouse

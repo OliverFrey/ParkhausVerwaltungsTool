@@ -55,11 +55,8 @@ namespace ParkplatzVerwaltungsTool.Controllers
         public IActionResult Create()
         {
             //Hier muss mit .include ein model erstellt und dann ans View übergeben werden
-            ParkingHouseViewModel model = new ParkingHouseViewModel();
-            model.ParkingHouses = new ParkingHouse();
-            model.ParkingHouseLevels = new ParkingHouseLevel();
-            model.ParkingPlaces = new ParkingPlace();
-            return View(model);
+            
+            return View();
         }
 
         // POST: ParkingHouses/Create
@@ -69,27 +66,27 @@ namespace ParkplatzVerwaltungsTool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ParkingHouses,ParkingHouseLevels,ParkingPlaces")] ParkingHouseViewModel parkingHouseViewModel)
         {
-            if (parkingHouseViewModel.ParkingHouses.ParkingHouseName != null && parkingHouseViewModel.ParkingHouseLevels.ParkingHouseLevelName != null && parkingHouseViewModel.ParkingPlaces.ParkingPlaceNumber != null)
-            {
-                parkingHouseViewModel.ParkingHouseLevels.ParkingPlaces.Add(parkingHouseViewModel.ParkingPlaces);
-                parkingHouseViewModel.ParkingHouses.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
-                _context.ParkingPlaces.Add(parkingHouseViewModel.ParkingPlaces);
-                _context.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
-                _context.ParkingHouses.Add(parkingHouseViewModel.ParkingHouses);
-                await _context.SaveChangesAsync();
-            }
-            else if (parkingHouseViewModel.ParkingHouses.ParkingHouseName != null && parkingHouseViewModel.ParkingHouseLevels.ParkingHouseLevelName != null)
-            {
-                parkingHouseViewModel.ParkingHouses.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
-                _context.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
-                _context.ParkingHouses.Add(parkingHouseViewModel.ParkingHouses);
-                await _context.SaveChangesAsync();
-            }
-            else if (parkingHouseViewModel.ParkingHouses.ParkingHouseName != null)
-            {
-                _context.ParkingHouses.Add(parkingHouseViewModel.ParkingHouses);
-                await _context.SaveChangesAsync();
-            }
+            //if (parkingHouseViewModel.ParkingHouses.ParkingHouseName != null && parkingHouseViewModel.ParkingHouseLevels.ParkingHouseLevelName != null && parkingHouseViewModel.ParkingPlaces.ParkingPlaceNumber != null)
+            //{
+            //    parkingHouseViewModel.ParkingHouseLevels.ParkingPlaces.Add(parkingHouseViewModel.ParkingPlaces);
+            //    parkingHouseViewModel.ParkingHouses.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
+            //    _context.ParkingPlaces.Add(parkingHouseViewModel.ParkingPlaces);
+            //    _context.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
+            //    _context.ParkingHouses.Add(parkingHouseViewModel.ParkingHouses);
+            //    await _context.SaveChangesAsync();
+            //}
+            //else if (parkingHouseViewModel.ParkingHouses.ParkingHouseName != null && parkingHouseViewModel.ParkingHouseLevels.ParkingHouseLevelName != null)
+            //{
+            //    parkingHouseViewModel.ParkingHouses.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
+            //    _context.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
+            //    _context.ParkingHouses.Add(parkingHouseViewModel.ParkingHouses);
+            //    await _context.SaveChangesAsync();
+            //}
+            //else if (parkingHouseViewModel.ParkingHouses.ParkingHouseName != null)
+            //{
+            //    _context.ParkingHouses.Add(parkingHouseViewModel.ParkingHouses);
+            //    await _context.SaveChangesAsync();
+            //}
             return RedirectToAction(nameof(Index));
         }
 
@@ -101,14 +98,17 @@ namespace ParkplatzVerwaltungsTool.Controllers
                 return NotFound();
             }
 
-
             var parkingHouse = await _context.ParkingHouses.Include(m => m.ParkingHouseLevels).ThenInclude(pl => pl.ParkingPlaces).Where(m => m.ParkingHouseId == id).FirstOrDefaultAsync();
             if (parkingHouse == null)
             {
                 return NotFound();
             }
-            
-            return View(parkingHouse);
+
+            var viewModel = new ParkingHouseViewModel();
+            viewModel.ParkingHouses = parkingHouse;
+            viewModel.ParkingHouseLevels = parkingHouse.ParkingHouseLevels.ToList();
+
+            return View(viewModel);
         }
 
         // POST: ParkingHouses/Edit/5
@@ -123,28 +123,28 @@ namespace ParkplatzVerwaltungsTool.Controllers
                 return NotFound();
             }
             
-            var parkingPlaces = await _context.ParkingPlaces.FirstOrDefaultAsync();
-            if (parkingHouseViewModel.ParkingPlaces != null)
-            {
-                if (parkingHouseViewModel.ParkingPlaces.ParkingPlaceNumber != parkingPlaces.ParkingPlaceNumber)
-                {
-                    _context.ParkingPlaces.Remove(parkingPlaces);
-                    _context.ParkingPlaces.Add(parkingHouseViewModel.ParkingPlaces);
-                    await _context.SaveChangesAsync();
-                }
-            }
+            //var parkingPlaces = await _context.ParkingPlaces.FirstOrDefaultAsync();
+            //if (parkingHouseViewModel.ParkingPlaces != null)
+            //{
+            //    if (parkingHouseViewModel.ParkingPlaces.ParkingPlaceNumber != parkingPlaces.ParkingPlaceNumber)
+            //    {
+            //        _context.ParkingPlaces.Remove(parkingPlaces);
+            //        _context.ParkingPlaces.Add(parkingHouseViewModel.ParkingPlaces);
+            //        await _context.SaveChangesAsync();
+            //    }
+            //}
 
 
-            var parkingHouseLevels = await _context.ParkingHouseLevels.FirstOrDefaultAsync();
-            if (parkingHouseViewModel.ParkingHouseLevels != null)
-            {
-                if (parkingHouseViewModel.ParkingHouseLevels.ParkingHouseLevelName != parkingHouseLevels.ParkingHouseLevelName)
-                {
-                    _context.ParkingHouseLevels.Remove(parkingHouseLevels);
-                    _context.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
-                    await _context.SaveChangesAsync();
-                }
-            }
+            //var parkingHouseLevels = await _context.ParkingHouseLevels.FirstOrDefaultAsync();
+            //if (parkingHouseViewModel.ParkingHouseLevels != null)
+            //{
+            //    if (parkingHouseViewModel.ParkingHouseLevels.ParkingHouseLevelName != parkingHouseLevels.ParkingHouseLevelName)
+            //    {
+            //        _context.ParkingHouseLevels.Remove(parkingHouseLevels);
+            //        _context.ParkingHouseLevels.Add(parkingHouseViewModel.ParkingHouseLevels);
+            //        await _context.SaveChangesAsync();
+            //    }
+            //}
 
             if (parkingHouseViewModel.ParkingHouses != null)
             {
