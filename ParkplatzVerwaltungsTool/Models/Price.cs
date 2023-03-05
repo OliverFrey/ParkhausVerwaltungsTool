@@ -19,6 +19,10 @@ namespace ParkplatzVerwaltungsTool.Models
         public int TicketId { get; set; }
         public DateTime EntryTime { get; set; }
         public DateTime ExitDate { get; set; }
-        public int TotalCost { get; set; }
+        public double TotalCost { get; set; }
+        public int ParkingHouseId { get; set; }
+        public int ParkingPlaceId { get; set; }
+
+        
     }
 }

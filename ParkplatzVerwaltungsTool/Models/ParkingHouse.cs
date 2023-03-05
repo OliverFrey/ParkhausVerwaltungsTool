@@ -33,8 +33,7 @@ namespace ParkplatzVerwaltungsTool.Models
         public int ParkingHouseLevelId { get; set; }
         public int ParkingHouseId { get; set; }
         public string ParkingHouseLevelName { get; set; }
-        public int ParkingPlaces { get; set; }
-        //public List<ParkingPlace> ParkingPlaces { get; set; }
+        public List<ParkingPlace> ParkingPlaces { get; set; }
 
         //public ParkingHouseLevel()
         //{
@@ -42,11 +41,11 @@ namespace ParkplatzVerwaltungsTool.Models
         //}
     }
 
-    //public class ParkingPlace
-    //{
-    //    [Key]
-    //    public int ParkingPlaceId { get; set; }
-    //    public int ParkingHouseLevelId { get; set; }
-    //    public int? ParkingPlaceNumber { get; set; }
-    //}
+    public class ParkingPlace
+    {
+        [Key]
+        public int ParkingPlaceId { get; set; }
+        public int ParkingHouseLevelId { get; set; }
+        public int? ParkingPlaceNumber { get; set; }
+    }
 }

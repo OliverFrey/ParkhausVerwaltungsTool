@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ParkplatzVerwaltungsTool.Models;
 
 namespace ParkplatzVerwaltungsTool.Controllers
@@ -47,9 +49,7 @@ namespace ParkplatzVerwaltungsTool.Controllers
         // GET: ParkingHouses/Create
         public IActionResult Create()
         {
-            ParkingHouseViewModel house = new ParkingHouseViewModel();
-            house.ParkingHouseLevels.Add(new ParkingHouseLevel());
-            return View(house);
+            return View();
         }
 
         // POST: ParkingHouses/Create
@@ -57,18 +57,16 @@ namespace ParkplatzVerwaltungsTool.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ParkingHouseViewModel parkingHouseViewModel)
+        public async Task<IActionResult> Create(int id, [Bind("ParkingHouseId,ParkingHouseName,ParkingHouseLevels,Prices")] ParkingHouse parkingHouse, [Bind("ParkingHouseLevelId,ParkingHouseId,ParkingHouseLevelName,ParkingPlaces")] ParkingHouseLevel parkingHouseLevel)
         {
             if (ModelState.IsValid)
             {
-                var parkingHouse = new ParkingHouse();
-                parkingHouse = parkingHouseViewModel.ParkingHouses;
-                parkingHouse.ParkingHouseLevels = parkingHouseViewModel.ParkingHouseLevels;
+                parkingHouse.ParkingHouseLevels.Add(parkingHouseLevel);
                 _context.Add(parkingHouse);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(parkingHouseViewModel);
+            return View(parkingHouse);
         }
 
         // GET: ParkingHouses/Edit/5
@@ -79,16 +77,16 @@ namespace ParkplatzVerwaltungsTool.Controllers
                 return NotFound();
             }
 
-            var parkingHouse = await _context.ParkingHouses.Include(p => p.ParkingHouseLevels)
-                                          .Include(p => p.Prices).Where(p => p.ParkingHouseId == id).FirstOrDefaultAsync();
-            if (parkingHouse == null)
-            {
-                return NotFound();
-            }
+            //var parkingHouse = await _context.ParkingHouses.Include(p => p.ParkingHouseLevels)
+            //                              .Include(p => p.Prices).Where(p => p.ParkingHouseId == id).FirstOrDefaultAsync();
+            //if (parkingHouse == null)
+            //{
+            //    return NotFound();
+            //}
 
             var parkingHouseViewModel = new ParkingHouseViewModel();
-            parkingHouseViewModel.ParkingHouses = parkingHouse;
-            parkingHouseViewModel.ParkingHouseLevels = parkingHouse.ParkingHouseLevels;
+            //parkingHouseViewModel.ParkingHouses = parkingHouse;
+            //parkingHouseViewModel.ParkingHouseLevels = parkingHouse.ParkingHouseLevels;
 
             return View(parkingHouseViewModel);
         }
@@ -168,6 +166,20 @@ namespace ParkplatzVerwaltungsTool.Controllers
         private bool ParkingHouseExists(int id)
         {
           return (_context.ParkingHouses?.Any(e => e.ParkingHouseId == id)).GetValueOrDefault();
+        }
+
+
+        public double CreateRevenue(int parkingHouseId, DateTime startDate, DateTime endDate)
+        {
+            var tickets = _context.Tickets.Where(t => t.ParkingHouseId == parkingHouseId).Where(t => t.EntryTime >= startDate).Where(t => t.ExitDate <= endDate).ToList();
+
+            var revenue = 0.0;
+            foreach (var ticket in tickets)
+            {
+                revenue += ticket.TotalCost;
+            }
+
+            return revenue;
         }
     }
 }
